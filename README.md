@@ -66,7 +66,7 @@ The simulation successfully demonstrated the differential steering behavior:
 * **Conclusion:** The OR-gate mixer successfully injected the PWM signal, effectively slowing down the inner wheel to correct the path without a hard stop.
 
 ### 2.3 Visual Proof
-![gg](https://github.com/user-attachments/assets/bdffaf88-669e-4cbd-a506-b927517ba4f5)
+<img width="881" height="260" alt="gg" src="https://github.com/user-attachments/assets/c712121c-325a-4e11-8273-a3a06e7b1e93" />
 **Figure 2.1:** Falstad simulation verifying the "Soft Turn" logic. Note the Right Motor LED state reflecting the mixed PWM signal.
 
 
