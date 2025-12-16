@@ -1,4 +1,4 @@
-![gg](https://github.com/user-attachments/assets/bdffaf88-669e-4cbd-a506-b927517ba4f5)# Logic-Gate Differential Line Follower
+# Logic-Gate Differential Line Follower
 ### Engineering Research Project | E/23/085
 
 ![Status](https://img.shields.io/badge/Phase-Simulation-blue) ![Type](https://img.shields.io/badge/Hardware-No_Microcontroller-red)
@@ -66,8 +66,7 @@ The simulation successfully demonstrated the differential steering behavior:
 * **Conclusion:** The OR-gate mixer successfully injected the PWM signal, effectively slowing down the inner wheel to correct the path without a hard stop.
 
 ### 2.3 Visual Proof
-<img width="881" height="260" alt="gg" src="https://github.com/user-attachments/assets/407c99db-16a9-48ae-bf55-59653c8676a3" />
-
+![gg](https://github.com/user-attachments/assets/bdffaf88-669e-4cbd-a506-b927517ba4f5)
 **Figure 2.1:** Falstad simulation verifying the "Soft Turn" logic. Note the Right Motor LED state reflecting the mixed PWM signal.
 
 
