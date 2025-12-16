@@ -1,9 +1,10 @@
 # Logic-Gate Differential Line Follower
 ### Engineering Research Project | E/23/085
 
-![Status](https://img.shields.io/badge/Phase-Simulation-blue) ![Type](https://img.shields.io/badge/Hardware-No_Microcontroller-red)
+![Status](https://img.shields.io/badge/Phase-PCB_Design-orange) ![Type](https://img.shields.io/badge/Hardware-No_Microcontroller-red)
+
 # Phase 1: Mathematical Modeling & Logic Reduction
-**Status:** Completed
+**Status:** ✅ Completed
 **Objective:** To derive the optimal Boolean logic for a 3-sensor differential drive system using the minimum number of 74xx series gates.
 
 ## 1.1 Sensor State Definition
@@ -38,16 +39,18 @@ $$RM = L + (C \cdot \bar{R})$$
 Based on this derivation, the control circuit requires:
 * **1x 74HC04 (NOT):** To invert L and R inputs.
 * **1x 74HC08 (AND):** To combine Center signal with Inverted side signals.
-* **1x 74HC32 (OR):** To combine the steering logic.ya*
+* **1x 74HC32 (OR):** To combine the steering logic.
 
-  # Phase 2: Mixed-Signal Simulation & Verification
+---
+
+# Phase 2: Mixed-Signal Simulation & Verification
 **Status:** ✅ Verified
 **Tools:** Falstad Circuit Simulator (Manual Build)
 
 ## 2.1 Simulation Setup
-Due to the complexity of mixed-signal modeling (Analog + Digital), I constructed a manual test bench to verify the "PWM Mixing" hypothesis.
+Due to the complexity of mixed-signal modeling (Analog + Digital), I constructed a manual test bench to verify the control logic.
 * **Logic Core:** Implemented the reduced Boolean equations ($LM = R + C\bar{L}$) using discrete NOT, AND, and OR gates.
-* **PWM Source:** Approximated the NE555 timer output using a 5Hz Clock Source to visualize the "duty cycle" injection into the motor control loop.
+* **Test Protocol:** Inputs were manually toggled to simulate the robot drifting left/right over the track line.
 * **Indicators:** LEDs configured to represent Left and Right Motor drive states.
 
 ## 2.2 Experimental Results
@@ -58,15 +61,38 @@ The simulation successfully demonstrated the differential steering behavior:
 * **Observation:** Both Left and Right Motor LEDs remained **Solid ON** (Logic High).
 * **Conclusion:** The robot drives forward at full speed when centered.
 
-### Test Case B: Soft Turn (PWM Mixing)
+### Test Case B: Soft Turn Correction
 * **Input State:** `L=0`, `C=1`, `R=1` (Drifting Left)
 * **Observation:**
     * **Left Motor:** Remained Solid ON (Maintain forward drive).
-    * **Right Motor:** Began **Blinking** at the Clock frequency.
-* **Conclusion:** The OR-gate mixer successfully injected the PWM signal, effectively slowing down the inner wheel to correct the path without a hard stop.
+    * **Right Motor:** Turned OFF.
+* **Conclusion:** The logic successfully cut power to the inner wheel to correct the path.
 
 ### 2.3 Visual Proof
-<img width="881" height="260" alt="gg" src="https://github.com/user-attachments/assets/c712121c-325a-4e11-8273-a3a06e7b1e93" />
-**Figure 2.1:** Falstad simulation verifying the "Soft Turn" logic. Note the Right Motor LED state reflecting the mixed PWM signal.
+<img width="881" height="260" alt="Simulation Proof" src="https://github.com/user-attachments/assets/c712121c-325a-4e11-8273-a3a06e7b1e93" />
 
+**Figure 2.1:** Falstad simulation verifying the logic states.
 
+---
+
+# Phase 3: PCB Design & Hardware Architecture
+**Status:** 🚧 In Progress (Schematic Completed, PCB Layout Started)
+**EDA Tool:** EasyEDA (Standard Edition)
+
+## 3.1 Control Architecture Revision (Refinement)
+During the schematic capture phase, I made a critical engineering decision to simplify the control topology.
+* **Decision:** Removed the PWM Mixing Stage (NE555 Timer).
+* **Rationale:** Adopting a **Pure Boolean Direct-Drive** architecture eliminates signal propagation delay and potential EMI noise from onboard switching frequencies. This prioritizes "Bang-Bang" steering response speed over variable speed control, which is more robust for high-speed line tracking on high-contrast tracks.
+* **New Power Strategy:** Upgraded from generic 9V standard to **2S Li-Ion (7.4V)** configuration. This provides high-current discharge capability to prevent logic brownouts during motor stall conditions.
+
+## 3.2 Schematic Implementation (Verified)
+The circuit has been successfully digitized in EasyEDA with the following professional-grade components:
+* **Power Regulation:** L7805 (TO-220) to step down 7.4V $\rightarrow$ 5.0V Logic Power.
+* **Logic Core:** 74HC04 (NOT), 74HC08 (AND), 74HC32 (OR) implemented in DIP packages for serviceability.
+* **Motor Drive:** L293D H-Bridge configured for non-inverting direct drive.
+* **Connectivity:** Standard 2.54mm Headers for modular sensor replacement.
+
+## 3.3 PCB Layout (Current Status)
+* **Dimensions:** 80mm x 60mm (Compact Chassis Profile).
+* **Placement Strategy:** "Sensor-Forward" design with rear-mounted power distribution to optimize center-of-gravity.
+* **Progress:** Board outline defined; component placement finalized. Routing of high-current power traces pending.
