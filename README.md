@@ -39,3 +39,35 @@ Based on this derivation, the control circuit requires:
 * **1x 74HC04 (NOT):** To invert L and R inputs.
 * **1x 74HC08 (AND):** To combine Center signal with Inverted side signals.
 * **1x 74HC32 (OR):** To combine the steering logic.ya*
+
+  # Phase 2: Mixed-Signal Simulation & Verification
+**Status:** ✅ Verified
+**Tools:** Falstad Circuit Simulator (Manual Build)
+
+## 2.1 Simulation Setup
+Due to the complexity of mixed-signal modeling (Analog + Digital), I constructed a manual test bench to verify the "PWM Mixing" hypothesis.
+* **Logic Core:** Implemented the reduced Boolean equations ($LM = R + C\bar{L}$) using discrete NOT, AND, and OR gates.
+* **PWM Source:** Approximated the NE555 timer output using a 5Hz Clock Source to visualize the "duty cycle" injection into the motor control loop.
+* **Indicators:** LEDs configured to represent Left and Right Motor drive states.
+
+## 2.2 Experimental Results
+The simulation successfully demonstrated the differential steering behavior:
+
+### Test Case A: Center Line Tracking (Straight)
+* **Input State:** `L=0`, `C=1`, `R=0`
+* **Observation:** Both Left and Right Motor LEDs remained **Solid ON** (Logic High).
+* **Conclusion:** The robot drives forward at full speed when centered.
+
+### Test Case B: Soft Turn (PWM Mixing)
+* **Input State:** `L=0`, `C=1`, `R=1` (Drifting Left)
+* **Observation:**
+    * **Left Motor:** Remained Solid ON (Maintain forward drive).
+    * **Right Motor:** Began **Blinking** at the Clock frequency.
+* **Conclusion:** The OR-gate mixer successfully injected the PWM signal, effectively slowing down the inner wheel to correct the path without a hard stop.
+
+### 2.3 Visual Proof
+<img width="1180" height="389" alt="image" src="https://github![Untitled](https://github.com/user-attachments/assets/90cd61ee-b806-45be-879c-db3f761e1bff)![Untitled](https://github.com/user-attachments/assets/90cd61ee-b806-45be-879c-db3f761e1bff)
+
+**Figure 2.1:** Falstad simulation verifying the "Soft Turn" logic. Note the Right Motor LED state reflecting the mixed PWM signal.
+
+
